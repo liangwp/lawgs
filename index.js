@@ -131,6 +131,10 @@ function CloudWatchLogger(logGroupName) {
 		logsSource.onNext(obj);
 	};
 
+	this.dispose = function() {
+		subscription.dispose();
+	};
+
 	/* Log group functions */
 	function _createLogGroupIfDoesntExist(name) {
 		return _checkLogGroupExists(name)
@@ -260,5 +264,11 @@ module.exports = {
 		extend(true, settings, s);
 	},
 
-	dispose: subscription.dispose
+	disposeAll: function () {
+		for (var logGroupName in loggers) {
+			if (loggers.hasOwnProperty(logGroupName)) {
+				loggers[logGroupName].dispose();
+			}
+		}
+	}
 };
