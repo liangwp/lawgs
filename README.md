@@ -4,6 +4,7 @@
 Nodejs logging to CloudWatch Logs made easy
 
 liangwp: Fixed bug where node process does not exit after program completion
+installation (not on npm): `npm install --save "https://github.com/liangwp/lawgs/tarball/master"`
 
 ## Features
 - Creates Log Groups automatically
