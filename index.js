@@ -132,8 +132,7 @@ function CloudWatchLogger(logGroupName) {
 	};
 
 	this.dispose = function() {
-		subscription.dispose();
-		console.log('dispose called properly (by log4js), but is it working?');
+		subscription.dispose(); // without this call, the node process does not exit
 	};
 
 	/* Log group functions */
