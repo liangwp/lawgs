@@ -3,6 +3,8 @@
 
 Nodejs logging to CloudWatch Logs made easy
 
+liangwp: Attempt to fix bug where node process does not exit after program completion
+
 ## Features
 - Creates Log Groups automatically
 - Creates Log Streams automatically
