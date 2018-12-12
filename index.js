@@ -131,9 +131,9 @@ function CloudWatchLogger(logGroupName) {
 		logsSource.onNext(obj);
 	};
 
-	this.shutdown = function() {
+	this.dispose = function() {
 		subscription.dispose();
-		console.log('shutdown called properly (by log4js), but is it working?');
+		console.log('dispose called properly (by log4js), but is it working?');
 	};
 
 	/* Log group functions */
