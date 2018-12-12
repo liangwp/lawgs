@@ -131,9 +131,9 @@ function CloudWatchLogger(logGroupName) {
 		logsSource.onNext(obj);
 	};
 
-	this.dispose = function() {
+	this.shutdown = function() {
 		subscription.dispose();
-		console.log('dispose called properly, but not working:');
+		console.log('shutdown called properly (by log4js), but is it working?');
 	};
 
 	/* Log group functions */
@@ -264,13 +264,4 @@ module.exports = {
 	config: function(s) {
 		extend(true, settings, s);
 	},
-
-	disposeAll: function () {
-		for (var logGroupName in loggers) {
-			if (loggers.hasOwnProperty(logGroupName)) {
-				console.log('disposing: ' + logGroupName);
-				loggers[logGroupName].dispose();
-			}
-		}
-	}
 };
