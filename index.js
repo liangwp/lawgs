@@ -133,6 +133,7 @@ function CloudWatchLogger(logGroupName) {
 
 	this.dispose = function() {
 		subscription.dispose();
+		console.log('dispose called properly, but not working:');
 	};
 
 	/* Log group functions */
@@ -267,6 +268,7 @@ module.exports = {
 	disposeAll: function () {
 		for (var logGroupName in loggers) {
 			if (loggers.hasOwnProperty(logGroupName)) {
+				console.log('disposing: ' + logGroupName);
 				loggers[logGroupName].dispose();
 			}
 		}
