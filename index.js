@@ -55,8 +55,8 @@ function CloudWatchLogger(logGroupName) {
 			createLogGroup = _createLogGroupIfDoesntExist(logGroupName)
 			.then(function() { logGroupExists = true; })
 			.then(function() {
-				if (this.config.retentionInDays && typeof(this.config.retentionInDays) == 'number') {
-					return _setLogGroupRetention(logGroupName, Math.floor(this.config.retentionInDays));
+				if (me.config.retentionInDays && typeof(me.config.retentionInDays) == 'number') {
+					return _setLogGroupRetention(logGroupName, Math.floor(me.config.retentionInDays));
 				}
 			})
 			.catch(function(err) { console.error(err); });
@@ -183,7 +183,7 @@ function CloudWatchLogger(logGroupName) {
 		
 		cw.putRetentionPolicy({
 			logGroupName: name,
-			retentionInDays: this.config.retentionInDays
+			retentionInDays: retentionInDays
 		}, function(err, data) {
 			if (err)	deferred.reject(err);
 			else		deferred.resolve(name);
