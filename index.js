@@ -20,7 +20,7 @@ var settings = {
 var DATA_ACCEPTED = 'DataAlreadyAcceptedException',
 	INVALID_TOKEN = 'InvalidSequenceTokenException';
 
-function CloudWatchLogger(logGroupName) {
+function CloudWatchLogger(logGroupName, retentionInDays) {
 	var me = this;
 
 	// Public properties
@@ -54,12 +54,6 @@ function CloudWatchLogger(logGroupName) {
 		if(!logGroupExists) {
 			createLogGroup = _createLogGroupIfDoesntExist(logGroupName)
 			.then(function() { logGroupExists = true; })
-			.then(function() {
-				console.log(settings); // caveman
-				if (settings.retentionInDays && typeof(settings.retentionInDays) == 'number') {
-					return _setLogGroupRetention(logGroupName, Math.floor(settings.retentionInDays));
-				}
-			})
 			.catch(function(err) { console.error(err); });
 		}
 
@@ -121,7 +115,7 @@ function CloudWatchLogger(logGroupName) {
 		if(conf.settings) {
 			settings = conf.settings;
 		}
-		console.log(settings); // caveman debug
+
 		AWS.config.update(settings.aws);
 		cw = new AWS.CloudWatchLogs({ apiVersion: '2015-01-28' });
 		initializeStream();
@@ -145,7 +139,19 @@ function CloudWatchLogger(logGroupName) {
 	function _createLogGroupIfDoesntExist(name) {
 		return _checkLogGroupExists(name)
 		.then(function(logGroupExists) {
-			if(!logGroupExists) return _createLogGroup(name)
+			if(!logGroupExists) {
+				var newloggroup = null;
+				return _createLogGroup(name)
+				.then(function(loggroup) {
+					newloggroup = loggroup;
+					if (retentionInDays && typeof(retentionInDays) == 'number') {
+						return _setLogGroupRetention(name, Math.floor(retentionInDays));
+					}
+				})
+				.then(function () {
+					return newloggroup;
+				});
+			}
 		});
 	}
 
@@ -273,9 +279,9 @@ util.inherits(CloudWatchLogger, EventEmitter);
 
 module.exports = {
 
-	getOrCreate: function(logGroupName) {
+	getOrCreate: function(logGroupName, retentionInDays) {
 		if(!loggers.hasOwnProperty(logGroupName)) {
-			loggers[logGroupName] = new CloudWatchLogger(logGroupName);
+			loggers[logGroupName] = new CloudWatchLogger(logGroupName, retentionInDays);
 		}
 
 		return loggers[logGroupName];
