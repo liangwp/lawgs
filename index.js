@@ -33,6 +33,7 @@ function CloudWatchLogger(logGroupName, retentionInDays) {
 	var logGroupExists = false;
 	var knownLogStreams = {};
 	var nextSequenceTokens = {}; // to ensure sequential upload of logs
+	var retentionInDays = retentionInDays;
 
 	var logsSource = new Rx.Subject();
 	var logsStream = logsSource; // Uninitialized yet
