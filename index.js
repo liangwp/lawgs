@@ -52,6 +52,7 @@ function CloudWatchLogger(logGroupName, retentionInDays) {
 
 		var createLogGroup = Q(true);
 		if(!logGroupExists) {
+			console.log(`caveman: ${retentionInDays}`);
 			createLogGroup = _createLogGroupIfDoesntExist(logGroupName, retentionInDays)
 			.then(function() { logGroupExists = true; })
 			.catch(function(err) { console.error(err); });
