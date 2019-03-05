@@ -55,8 +55,9 @@ function CloudWatchLogger(logGroupName) {
 			createLogGroup = _createLogGroupIfDoesntExist(logGroupName)
 			.then(function() { logGroupExists = true; })
 			.then(function() {
-				if (me.config.retentionInDays && typeof(me.config.retentionInDays) == 'number') {
-					return _setLogGroupRetention(logGroupName, Math.floor(me.config.retentionInDays));
+				console.log(settings); // caveman
+				if (settings.retentionInDays && typeof(settings.retentionInDays) == 'number') {
+					return _setLogGroupRetention(logGroupName, Math.floor(settings.retentionInDays));
 				}
 			})
 			.catch(function(err) { console.error(err); });
@@ -120,7 +121,7 @@ function CloudWatchLogger(logGroupName) {
 		if(conf.settings) {
 			settings = conf.settings;
 		}
-
+		console.log(settings); // caveman debug
 		AWS.config.update(settings.aws);
 		cw = new AWS.CloudWatchLogs({ apiVersion: '2015-01-28' });
 		initializeStream();
