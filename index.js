@@ -52,7 +52,7 @@ function CloudWatchLogger(logGroupName, retentionInDays) {
 
 		var createLogGroup = Q(true);
 		if(!logGroupExists) {
-			createLogGroup = _createLogGroupIfDoesntExist(logGroupName)
+			createLogGroup = _createLogGroupIfDoesntExist(logGroupName, retentionInDays)
 			.then(function() { logGroupExists = true; })
 			.catch(function(err) { console.error(err); });
 		}
@@ -136,7 +136,7 @@ function CloudWatchLogger(logGroupName, retentionInDays) {
 	};
 
 	/* Log group functions */
-	function _createLogGroupIfDoesntExist(name) {
+	function _createLogGroupIfDoesntExist(name, retention) {
 		return _checkLogGroupExists(name)
 		.then(function(logGroupExists) {
 			if(!logGroupExists) {
@@ -144,8 +144,8 @@ function CloudWatchLogger(logGroupName, retentionInDays) {
 				return _createLogGroup(name)
 				.then(function(loggroup) {
 					newloggroup = loggroup;
-					if (retentionInDays && typeof(retentionInDays) == 'number') {
-						return _setLogGroupRetention(name, Math.floor(retentionInDays));
+					if (retention && typeof(retention) == 'number') {
+						return _setLogGroupRetention(name, Math.floor(retention));
 					}
 				})
 				.then(function () {
