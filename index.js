@@ -24,7 +24,7 @@ function CloudWatchLogger(logGroupName, retentionInDays) {
 	var me = this;
 
 	// Public properties
-	this.showDebugLogs 		= true;
+	this.showDebugLogs 		= false;
 	this.uploadMaxTimer 	= 5000;
 	this.uploadBatchSize 	= 500;
 
@@ -53,7 +53,6 @@ function CloudWatchLogger(logGroupName, retentionInDays) {
 
 		var createLogGroup = Q(true);
 		if(!logGroupExists) {
-			_log(`caveman: ${retentionInDays}`);
 			createLogGroup = _createLogGroupIfDoesntExist(logGroupName, retentionInDays)
 			.then(function() { logGroupExists = true; })
 			.catch(function(err) { console.error(err); });
