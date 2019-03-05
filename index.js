@@ -54,6 +54,11 @@ function CloudWatchLogger(logGroupName) {
 		if(!logGroupExists) {
 			createLogGroup = _createLogGroupIfDoesntExist(logGroupName)
 			.then(function() { logGroupExists = true; })
+			.then(function() {
+				if (this.config.retentionInDays && typeof(this.config.retentionInDays) == 'number') {
+					return _setLogGroupRetention(logGroupName, Math.floor(this.config.retentionInDays));
+				}
+			})
 			.catch(function(err) { console.error(err); });
 		}
 
@@ -171,6 +176,21 @@ function CloudWatchLogger(logGroupName) {
 
 		return deferred.promise.timeout(settings.aws.timeout
 			|| DEFAULT_TIMEOUT, 'Could not create log group in a timely fashion');
+	}
+
+	function _setLogGroupRetention(name, retentionInDays) {
+		var deferred = Q.defer();
+		
+		cw.putRetentionPolicy({
+			logGroupName: name,
+			retentionInDays: this.config.retentionInDays
+		}, function(err, data) {
+			if (err)	deferred.reject(err);
+			else		deferred.resolve(name);
+		});
+
+		return deferred.promise.timeout(settings.aws.timeout
+			|| DEFAULT_TIMEOUT, 'Could not put retention policy to log group in a timely fashion');
 	}
 
 	/* Log streams functions */
